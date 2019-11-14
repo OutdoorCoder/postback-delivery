@@ -1,12 +1,15 @@
 # dockerfile for kochava project
-FROM ubuntu:14.04
+FROM ubuntu:14.04 as base
+
+
+FROM golang:onbuild as gobase
+COPY test.go /
+RUN CGO_ENABLED=0 go build -o main .
+
 
 FROM php:7.2-cli
 COPY ./test.php /
-RUN php test.php
-# CMD ["php", "test.php"]
+COPY ./wrapper_script.sh /wrapper_script.sh
+COPY --from=gobase /main /
 
-FROM golang:onbuild
-COPY ./test.go /
-RUN go build -o main .
-CMD ./main
+CMD ["./wrapper_script.sh"]
