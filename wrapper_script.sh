@@ -1,4 +1,4 @@
 #!/bin/bash
 
-php test.php
+php -S localhost:3971
 ./main
