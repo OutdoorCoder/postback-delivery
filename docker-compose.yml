@@ -1,6 +1,14 @@
 version: "3.7"
 services:
-  php:
+  php-apache:
     build: .
+    logging:
+      driver: "json-file"
     ports:
-      - 8080:3971
+      - 8040:80
+    links:
+      - redis
+  redis:
+    image: redis
+    expose:
+      - 6379
