@@ -1,5 +1,6 @@
 <?php
 
+require "Postback.php";
 //code seems to be no longer needed now that apache is hosting the server
 //header("Access-Control-Allow-Origin: *");
 //header("Content-Type: application/json; charset=UTF-8");
@@ -33,9 +34,24 @@ switch ($requestMethod) {
 
         break;
     case 'POST':
+        $params = (array) json_decode(file_get_contents('php://input'), TRUE);
+
+        $endpoint = $params['endpoint']['url'];
+        $method = $params['endpoint']['method'];
+        $inputDataArray = $params['data'];
+        $postback;
+
+        for($x = 0; $x < count($params['data']); $x++){
+
+          $postback = new Postback($method, $endpoint,  $inputDataArray[$x]['mascot'], $inputDataArray[$x]['location']);
+          //$postback->printPostback();
+          echo (int)$postback->getIsValid();
+        }
         //echo 'POST';
-        var_dump($_POST);
+        //var_dump($_POST);
         break;
+      default:
+        echo 'bad';
       }
 
 // pass the request method and user ID to the PersonController and process the HTTP request:
