@@ -12,3 +12,5 @@ services:
     image: redis
     expose:
       - 6379
+  golang:
+    build: ./go-app

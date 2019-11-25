@@ -1,6 +1,6 @@
 <?php
 
-  class Postback {
+  class Postback implements Serializable {
 
     private $isValid;
     private $requestMethod;
@@ -10,14 +10,14 @@
 
   	function __construct( $requestMethod, $url, $mascot, $location ) {
       $this->isValid = $this->verifyInput($requestMethod, $url, $mascot, $location);
+
   		$this->requestMethod = $requestMethod;
   		$this->url = $url;
       $this->mascot = $mascot;
       $this->location = $location;
   	}
 
-
-    function verifyInput($requestMethod, $url, $mascot, $location){
+    private function verifyInput($requestMethod, $url, $mascot, $location){
       if($requestMethod === NULL || trim($requestMethod) === ''){
         return false;
       }
@@ -32,6 +32,24 @@
       }
 
       return true;
+    }
+
+    public function serialize(){
+      return serialize ([
+        $this->requestMethod,
+    		$this->url,
+        $this->mascot,
+        $this->location
+      ]);
+    }
+
+    public function unserialize($data){
+      list(
+        $this->requestMethod,
+        $this->url,
+        $this->mascot,
+        $this->location
+      ) = unserialize($data);
     }
 
     function getIsValid() {

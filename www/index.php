@@ -12,8 +12,6 @@ $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $uri = explode( '/', $uri );
 
 
-// the user id is, of course, optional and must be a number:
-
 $requestMethod = $_SERVER["REQUEST_METHOD"];
 $redis = new Redis();
 
@@ -21,36 +19,42 @@ switch ($requestMethod) {
     case 'GET':
         echo 'GET';
 
-
+        //I don't think I'll recieve GET requests in this app.
+        //Instructions just mention post requests, which makes sense.
+        //TODO: remove this before the end of the project
         try {
-            $redis->connect('redis', 6379);
             echo 'here';
-            echo $_SERVER['REQUEST_URI'];
         } catch (\Exception $e) {
-
             var_dump($e->getMessage())  ;
             die;
         }
 
         break;
     case 'POST':
+
+        $redis->connect('redis', 6379);
         $params = (array) json_decode(file_get_contents('php://input'), TRUE);
 
         $endpoint = $params['endpoint']['url'];
         $method = $params['endpoint']['method'];
         $inputDataArray = $params['data'];
-        $postback;
 
         for($x = 0; $x < count($params['data']); $x++){
 
           $postback = new Postback($method, $endpoint,  $inputDataArray[$x]['mascot'], $inputDataArray[$x]['location']);
-          //$postback->printPostback();
-          echo (int)$postback->getIsValid();
+
+          if($postback->getIsValid()){
+            //push postback object to redis stack
+            $redis->lpush("postback-list", serialize($postback));
+          }
         }
-        //echo 'POST';
-        //var_dump($_POST);
+
+        $arList = $redis->lrange("postback-list", 0 ,6);
+        print_r($arList);
+
         break;
       default:
+        //Just ignore the request if this happens, maybe log it.
         echo 'bad';
       }
 
