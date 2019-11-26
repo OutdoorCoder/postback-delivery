@@ -2,25 +2,37 @@ package main
 
 import (
 		"fmt"
-		"github.com/go-redis/redis"
+		"log"
+		"encoding/json"
+		"github.com/gomodule/redigo/redis"
 )
+
+type Postback struct {
+	RequestMethod string
+	Url string
+	Mascot string
+	Location string
+}
 
 func main() {
 
-	client := redis.NewClient(&redis.Options{
-		Addr: "redis:6379",
-		Password: "",
-		DB: 0,
-	})
+	conn, err := redis.Dial("tcp", "redis:6379")
+	if err != nil {
+		fmt.Println(err)
+		log.Fatal(err)
+	}
 
-	pong, err := client.Ping().Result()
+	defer conn.Close()
 
-	fmt.Println(pong, err)
-
-	val, err := client.Do("RPOP", "postback-list").Result()
+	val, err := redis.String(conn.Do("RPOP", "postback-list"))
 	if err != nil {
 	    fmt.Println(err)
 	}
 
-	fmt.Println(val)
+	var valByte []byte = []byte(val)
+
+	var pback Postback
+	err = json.Unmarshal(valByte, &pback)
+
+	fmt.Println(pback)
 }

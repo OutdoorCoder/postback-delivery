@@ -45,7 +45,7 @@ switch ($requestMethod) {
 
           if($postback->getIsValid()){
             //push postback object to redis stack
-            $redis->lpush("postback-list", serialize($postback));
+            $redis->lpush("postback-list", json_encode($postback));
           }
         }
 

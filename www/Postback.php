@@ -1,6 +1,6 @@
 <?php
 
-  class Postback implements Serializable {
+  class Postback implements JsonSerializable {
 
     private $isValid;
     private $requestMethod;
@@ -34,22 +34,13 @@
       return true;
     }
 
-    public function serialize(){
-      return serialize ([
-        $this->requestMethod,
-    		$this->url,
-        $this->mascot,
-        $this->location
-      ]);
-    }
-
-    public function unserialize($data){
-      list(
-        $this->requestMethod,
-        $this->url,
-        $this->mascot,
-        $this->location
-      ) = unserialize($data);
+    public function jsonSerialize(){
+      return [
+        'requestMethod' => $this->requestMethod,
+    		'url' => $this->url,
+        'mascot' => $this->mascot,
+        'location' => $this->location
+      ];
     }
 
     function getIsValid() {
