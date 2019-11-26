@@ -4,14 +4,29 @@ import (
 		"fmt"
 		"log"
 		"encoding/json"
+		//"net/http"
 		"github.com/gomodule/redigo/redis"
 )
 
 type Postback struct {
 	RequestMethod string
 	Url string
-	Mascot string
-	Location string
+	Data []map[string]string
+}
+
+func sendHttpRequest(pback Postback){
+
+	switch pback.RequestMethod {
+		case "GET":
+			fmt.Println("GET")
+		case "POST":
+			fmt.Println("POST")
+		default:
+			fmt.Println("ERROR")
+	}
+
+	//resp, err := http.PostForm("http://example.com/form",
+	//url.Values{"key": {"Value"}, "id": {"123"}})
 }
 
 func main() {
@@ -24,15 +39,20 @@ func main() {
 
 	defer conn.Close()
 
+	//pull first value from Redis
 	val, err := redis.String(conn.Do("RPOP", "postback-list"))
 	if err != nil {
 	    fmt.Println(err)
 	}
+	//fmt.Println(val)
 
 	var valByte []byte = []byte(val)
 
 	var pback Postback
 	err = json.Unmarshal(valByte, &pback)
+
+	//Send http request
+	//sendHttpRequest(pback)
 
 	fmt.Println(pback)
 }

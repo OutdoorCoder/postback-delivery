@@ -39,15 +39,15 @@ switch ($requestMethod) {
         $method = $params['endpoint']['method'];
         $inputDataArray = $params['data'];
 
-        for($x = 0; $x < count($params['data']); $x++){
+        //print_r($inputDataArray[0]);
 
-          $postback = new Postback($method, $endpoint,  $inputDataArray[$x]['mascot'], $inputDataArray[$x]['location']);
+        $postback = new Postback($method, $endpoint,  $inputDataArray);
 
-          if($postback->getIsValid()){
-            //push postback object to redis stack
-            $redis->lpush("postback-list", json_encode($postback));
-          }
+        if($postback->getIsValid()){
+          //push postback object to redis stack
+          $redis->lpush("postback-list", json_encode($postback));
         }
+
 
         //$arList = $redis->lrange("postback-list", 0 ,6);
         //print_r($arList);
