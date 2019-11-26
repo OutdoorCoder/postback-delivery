@@ -49,8 +49,8 @@ switch ($requestMethod) {
           }
         }
 
-        $arList = $redis->lrange("postback-list", 0 ,6);
-        print_r($arList);
+        //$arList = $redis->lrange("postback-list", 0 ,6);
+        //print_r($arList);
 
         break;
       default:
