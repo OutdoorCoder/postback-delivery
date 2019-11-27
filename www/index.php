@@ -39,7 +39,7 @@ switch ($requestMethod) {
         $method = $params['endpoint']['method'];
         $inputDataArray = $params['data'];
 
-        //print_r($inputDataArray[0]);
+        print_r($inputDataArray[0]);
 
         $postback = new Postback($method, $endpoint,  $inputDataArray);
 

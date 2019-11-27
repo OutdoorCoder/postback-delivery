@@ -17,7 +17,19 @@ type Postback struct {
 func sendHttpRequest(pback Postback){
 
 	switch pback.RequestMethod {
-		case "GET":
+	case "GET":
+			//resp, err := http.Get("http://example.com/")
+			for _, dataMap := range pback.Data {
+
+				for k, v := range dataMap {
+					fmt.Println("k:", k, "v:", v)
+
+					//TODO: for each pair send an http request
+				}
+			}
+
+
+
 			fmt.Println("GET")
 		case "POST":
 			fmt.Println("POST")
@@ -52,7 +64,7 @@ func main() {
 	err = json.Unmarshal(valByte, &pback)
 
 	//Send http request
-	//sendHttpRequest(pback)
+	sendHttpRequest(pback)
 
 	fmt.Println(pback)
 }
