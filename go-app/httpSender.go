@@ -4,6 +4,7 @@ import (
 		"fmt"
 		"log"
 		"encoding/json"
+		"strings"
 		//"net/http"
 		"github.com/gomodule/redigo/redis"
 )
@@ -24,6 +25,8 @@ func sendHttpRequest(pback Postback){
 				for k, v := range dataMap {
 					fmt.Println("k:", k, "v:", v)
 
+					httpUrl := strings.Replace(pback.Url, "{" + k + "}", v, 1)
+					fmt.Println(httpUrl)
 					//TODO: for each pair send an http request
 				}
 			}
