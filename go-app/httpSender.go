@@ -4,8 +4,9 @@ import (
 		"fmt"
 		"log"
 		"encoding/json"
+		"time"
 		"strings"
-		//"net/http"
+		"net/http"
 		"github.com/gomodule/redigo/redis"
 )
 
@@ -19,26 +20,28 @@ func sendHttpRequest(pback Postback){
 
 	switch pback.RequestMethod {
 	case "GET":
-			//resp, err := http.Get("http://example.com/")
+			var httpUrl string = pback.Url
 			for _, dataMap := range pback.Data {
-
-				httpUrl := pback.Url
 				for k, v := range dataMap {
 					fmt.Println("k:", k, "v:", v)
 
 					httpUrl = strings.Replace(httpUrl, "{" + k + "}", v, 1)
 					fmt.Println("Request String: " + httpUrl)
-					//TODO: for each pair send an http request
 				}
+
+				//send http request
+				resp, err := http.Get(httpUrl)
+				if err != nil {
+					fmt.Println(err)
+					log.Fatal(err)
+				}
+				fmt.Println(resp)
 			}
 
-
-
-			fmt.Println("GET")
 		case "POST":
-			fmt.Println("POST")
+			//fmt.Println("POST")
 		default:
-			fmt.Println("ERROR")
+			//fmt.Println("ERROR")
 	}
 
 	//resp, err := http.PostForm("http://example.com/form",
@@ -55,20 +58,26 @@ func main() {
 
 	defer conn.Close()
 
-	//pull first value from Redis
-	val, err := redis.String(conn.Do("RPOP", "postback-list"))
-	if err != nil {
-	    fmt.Println(err)
+	for true {
+
+		val, err := redis.String(conn.Do("RPOP", "postback-list"))
+		if err != nil {
+		    fmt.Println(err)
+		}
+
+		if len(val) > 0 {
+			fmt.Println("Grabbed request")
+			var valByte []byte = []byte(val)
+
+			var pback Postback
+			err = json.Unmarshal(valByte, &pback)
+
+			//Send http request
+			sendHttpRequest(pback)
+		} else{
+			fmt.Println("No requests left")
+			time.Sleep(1 * time.Second)
+		}
+
 	}
-	//fmt.Println(val)
-
-	var valByte []byte = []byte(val)
-
-	var pback Postback
-	err = json.Unmarshal(valByte, &pback)
-
-	//Send http request
-	sendHttpRequest(pback)
-
-	//fmt.Println(pback)
 }
