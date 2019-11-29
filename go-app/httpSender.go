@@ -22,11 +22,12 @@ func sendHttpRequest(pback Postback){
 			//resp, err := http.Get("http://example.com/")
 			for _, dataMap := range pback.Data {
 
+				httpUrl := pback.Url
 				for k, v := range dataMap {
 					fmt.Println("k:", k, "v:", v)
 
-					httpUrl := strings.Replace(pback.Url, "{" + k + "}", v, 1)
-					fmt.Println(httpUrl)
+					httpUrl = strings.Replace(httpUrl, "{" + k + "}", v, 1)
+					fmt.Println("Request String: " + httpUrl)
 					//TODO: for each pair send an http request
 				}
 			}
@@ -69,5 +70,5 @@ func main() {
 	//Send http request
 	sendHttpRequest(pback)
 
-	fmt.Println(pback)
+	//fmt.Println(pback)
 }
