@@ -12,7 +12,6 @@
   		$this->requestMethod = $requestMethod;
   		$this->url = $url;
       $this->dataArray = $dataArray;
-      //print_r($dataArray[0]);
   	}
 
     private function verifyInput($requestMethod, $url, $dataArray){
@@ -24,14 +23,10 @@
       }
 
       foreach ($dataArray as $array) {
-        //print_r($array);
-    // loop through each named array and set the desired value
-    // using the current $key and $name
         foreach ($array as $key => $value) {
-            //echo "{$key} => {$value} ";
-            if($key === NULL || trim($value) === ''){
-              return false;
-            }
+          if($key === NULL || trim($value) === ''){
+            return false;
+          }
         }
       }
 
