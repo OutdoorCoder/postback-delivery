@@ -4,7 +4,7 @@ Service to function as a small scale simulation of distributing data to third pa
 This app is built in Docker using docker-compose. This requires the file docker-compose.yml to organize the app
 There are three containers in the app:
 
-  1. PHP server to take in http requests in the following format:
+  1. PHP apache server to take in http requests in the following format:
 
    {
     "endpoint":{
@@ -28,7 +28,7 @@ There are three containers in the app:
   }
 
   Each key listed in the url will be replaced by that keys corresponding value in the data map.
-  Rhis format specifies http requests to be sent by the golang app (the third piece).
+  This format specifies http requests to be sent by the golang app (the third piece).
   These requests are turned into Postback objects were are pushed to Redis.
 
   2. Redis stack to take in Postback objects
@@ -59,6 +59,11 @@ There are three containers in the app:
   
   DockerFile - build instructions for the php-apache server
   
+### Dependencies Between Containers 
+
+  - The golang container and the php container both use the Postback object, which is defined seperately in each container. Changes to the Postback object in one container must be reflected in the other.
+  
+  - The php-apache container pushes to redis using the redis command lpush, this is reflected in the golang container which uses the redis command rpop. If the command in one container is changed then the other container should reflect that change.
 
 
 
