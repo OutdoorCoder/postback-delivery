@@ -7,6 +7,8 @@ import (
 		"time"
 		"strings"
 		"net/http"
+		"io/ioutil"
+		"github.com/tcnksm/go-httpstat"
 		"github.com/gomodule/redigo/redis"
 )
 
@@ -23,19 +25,52 @@ func sendHttpRequest(pback Postback){
 			var httpUrl string = pback.Url
 			for _, dataMap := range pback.Data {
 				for k, v := range dataMap {
-					fmt.Println("k:", k, "v:", v)
+					//fmt.Println("k:", k, "v:", v)
 
 					httpUrl = strings.Replace(httpUrl, "{" + k + "}", v, 1)
-					fmt.Println("Request String: " + httpUrl)
+					//fmt.Println("Request String: " + httpUrl)
 				}
 
 				//send http request
-				resp, err := http.Get(httpUrl)
+				req, err := http.NewRequest("GET", httpUrl, nil)
 				if err != nil {
 					fmt.Println(err)
 					log.Fatal(err)
 				}
-				fmt.Println(resp)
+				//log delivery time, respose code, response time
+				//and response body
+
+				var result httpstat.Result
+				ctx := httpstat.WithHTTPStat(req.Context(), &result)
+				req = req.WithContext(ctx)
+
+				client := http.DefaultClient
+				res, err := client.Do(req)
+				if err != nil {
+				    log.Fatal(err)
+				}
+
+				if res.StatusCode == http.StatusOK {
+			    bodyBytes, err := ioutil.ReadAll(res.Body)
+			    if err != nil {
+			        log.Fatal(err)
+			    }
+			    bodyString := string(bodyBytes)
+			    log.Printf(bodyString)
+
+				}
+
+
+				res.Body.Close()
+				result.End(time.Now())
+				log.Printf(result.Total(time.Now()).String())
+				log.Printf(res.Status)
+				//fmt.Println(result.Total(time.Now()))
+
+				// Show results
+				//log.Printf("%+v", result)
+
+				fmt.Println(req)
 			}
 
 		case "POST":
