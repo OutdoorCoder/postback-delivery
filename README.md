@@ -51,7 +51,7 @@ There are three containers in the app:
   
     index.php      - PHP server. Takes in http requests, turns them into Postback objects, then                          pushes them to Redis
     
- ### Other Files:
+ ##### Other Files:
   
   apache-config.conf - configuration file for apache server
   
