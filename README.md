@@ -34,7 +34,9 @@ There are three pieces to the app:
 
   3. Golang app to send http requests pulled from Redis
   
-  This app will continually check Redis for Postback objects. For each list of key value pairs in the Postback objects data map the app will send an http request, after inserting the values into their corresponding places in the url.
+  This app will continually check Redis for Postback objects. For each list of key value pairs in     the Postback objects data map the app will send an http request, after inserting the values into   their corresponding places in the url.
+  
+  This app logs the requests delivery time, response time, and response body
 
 
 
