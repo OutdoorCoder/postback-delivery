@@ -8,7 +8,7 @@ There are three containers in the app:
 
    {
     "endpoint":{
-      "method":"GET", //can also be POST
+      "method":"GET",
       "url":"https://postman-echo.com/get?foo1={key}&foo2={key2}&foo-n={key-n}"
     },
     "data":[
@@ -40,18 +40,25 @@ There are three containers in the app:
   This app logs the requests delivery time, response time, and response body
   
   
-File Structure:
+### File Structure:
 
   Folder: go-app    - Holds files for the Golang application
   
     Dockerfile      - build instructions for the Golang container
-    
-    httpSender.go   - golang code for pulling Postback objects from Redis and then sending http                           requests built from those postback objects
+    httpSender.go   - golang code for pulling Postback objects from Redis and then sending http requests built from those postback objects
     
   Folder: www      - Holds php files. Folder must be named www to work with apache server
   
     index.php      - PHP server. Takes in http requests, turns them into Postback objects, then                          pushes them to Redis
-
+    
+ ### Other Files:
+  
+  apache-config.conf - configuration file for apache server
+  
+  docker-compose.yml - configuration file for the docker image and its three containers
+  
+  DockerFile - build instructions for the php-apache server
+  
 
 
 
