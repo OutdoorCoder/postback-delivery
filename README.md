@@ -43,10 +43,13 @@ There are three containers in the app:
 File Structure:
 
   Folder: go-app    - Holds files for the Golang application
+  
     Dockerfile      - build instructions for the Golang container
+    
     httpSender.go   - golang code for pulling Postback objects from Redis and then sending http                           requests built from those postback objects
     
   Folder: www      - Holds php files. Folder must be named www to work with apache server
+  
     index.php      - PHP server. Takes in http requests, turns them into Postback objects, then                          pushes them to Redis
 
 
