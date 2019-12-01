@@ -24,7 +24,7 @@
 
       foreach ($dataArray as $array) {
         foreach ($array as $key => $value) {
-          if($key === NULL || trim($value) === ''){
+          if($key === NULL || trim($key) === '' || $value === NULL || trim($value) === ''){
             return false;
           }
         }

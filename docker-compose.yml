@@ -4,15 +4,18 @@ services:
     build: .
     logging:
       driver: "json-file"
+    restart: always
     ports:
       - 8040:80
     links:
       - redis
   redis:
     image: redis
+    restart: always
     expose:
       - 6379
   golang:
     build: ./go-app
+    restart: always
     links:
       - redis

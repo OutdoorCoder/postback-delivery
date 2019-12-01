@@ -96,9 +96,8 @@ func main() {
 			var pback Postback
 			err = json.Unmarshal(valByte, &pback)
 
-			//Send http request
+			//Send http requests
 			var requestUrls []string = buildHttpUrls(pback)
-			//fmt.Println(requestUrls)
 
 			for _, url := range requestUrls {
 				sendHttpRequest(url, pback.RequestMethod)
