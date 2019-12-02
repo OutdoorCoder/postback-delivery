@@ -50,6 +50,7 @@ There are three containers in the app:
   Folder: www      - Holds php files. Folder must be named www to work with apache server
 
     index.php      - PHP server. Takes in http requests, turns them into Postback objects, then pushes them to Redis
+    Postback.php   - Defines the Postback object. It will validate any new Postback objects and set a field IsValid for each object.
 
  ##### Other Files:
 
@@ -59,7 +60,7 @@ There are three containers in the app:
 
   DockerFile - build instructions for the php-apache server
 
-### Dependencies Between Containers 
+### Dependencies Between Containers
 
   - The golang container and the php container both use the Postback object, which is defined seperately in each container. Changes to the Postback object in one container must be reflected in the other.
 
