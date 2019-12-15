@@ -1,7 +1,7 @@
 # postback-delivery
 Service to function as a small scale simulation of distributing data to third parties in real time.
 
-This app is built in Docker using docker-compose. This requires the file docker-compose.yml to organize the app
+This app is built in Docker using docker-compose. This requires the file docker-compose.yml to organize the app.
 There are three containers in the app:
 
   1. PHP apache server to take in http requests in the following format:
